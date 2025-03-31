@@ -1,0 +1,1 @@
+This project aims to predict whether a patient has diabetes using classification models based on demographic and health-related features such as age, gender, BMI, blood glucose level, and medical history.
