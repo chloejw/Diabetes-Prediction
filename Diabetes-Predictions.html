@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="statement-of-purpose" class="level2">
 <h2 class="anchored" data-anchor-id="statement-of-purpose">Statement of Purpose</h2>
-<p>Diabetes has become one of the leading causes of death according to the CDC (National Center for Health Statistics), the goal of this project is to develop a predictive model that determines whether a patient has diabetes based on their medical and demographic information given to us in this data set. Using features such as age, BMI, hypertension, heart disease, smoking history, HbA1c level, and blood glucose level, we will create a model that will find and analyze patterns within the dataset to accurately classify patients as diabetic or non-diabetic. The creation of this model aims to aid in early detection and support informed medical decision-making. This analysis addresses a vital question: Can we use existing patient data to predict diabetes with high accuracy and sensitivity?</p>
+<p>Diabetes has become one of the leading causes of death according to the CDC (National Center for Health Statistics) [2], the goal of this project is to develop a predictive model that determines whether a patient has diabetes based on their medical and demographic information given to us in this data set. Using features such as age, BMI, hypertension, heart disease, smoking history, HbA1c level, and blood glucose level, we will create a model that will find and analyze patterns within the dataset to accurately classify patients as diabetic or non-diabetic. The creation of this model aims to aid in early detection and support informed medical decision-making. This analysis addresses a vital question: Can we use existing patient data to predict diabetes with high accuracy and sensitivity?</p>
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
@@ -194,6 +194,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="executive-summary" class="level2">
 <h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p>This report explores the use of machine learning to predict diabetes based on medical and demographic data. Key findings from the analysis show that higher HbA1c and blood glucose levels, along with conditions like hypertension and heart disease, are strong indicators of diabetes. Among the models tested, the random forest classifier performed best, delivering high accuracy and balanced predictive performance.</p>
+<p>Based on these results, we recommend incorporating a random forest-based predictive tool into early screening processes. This model can help healthcare providers identify high-risk individuals more efficiently, allowing for earlier interventions and better patient outcomes.</p>
 </section>
 <section id="exploratory-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-analysis">Exploratory Analysis</h2>
@@ -202,61 +204,464 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 9
-  gender   age hypertension heart_disease smoking_history   bmi hb_a1c_level
-  &lt;chr&gt;  &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;        &lt;dbl&gt;
-1 Female    80            0             1 never            25.2          6.6
-2 Female    54            0             0 No Info          27.3          6.6
-3 Male      28            0             0 never            27.3          5.7
-4 Female    36            0             0 current          23.4          5  
-5 Male      76            1             1 current          20.1          4.8
-6 Female    20            0             0 never            27.3          6.6
-# ℹ 2 more variables: blood_glucose_level &lt;dbl&gt;, diabetes &lt;fct&gt;</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 3%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 5%">
+<col style="width: 12%">
+<col style="width: 19%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">gender</th>
+<th style="text-align: right;">age</th>
+<th style="text-align: right;">hypertension</th>
+<th style="text-align: right;">heart_disease</th>
+<th style="text-align: left;">smoking_history</th>
+<th style="text-align: right;">bmi</th>
+<th style="text-align: right;">hb_a1c_level</th>
+<th style="text-align: right;">blood_glucose_level</th>
+<th style="text-align: left;">diabetes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">never</td>
+<td style="text-align: right;">25.19</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">140</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">No Info</td>
+<td style="text-align: right;">27.32</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">never</td>
+<td style="text-align: right;">27.32</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">158</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">current</td>
+<td style="text-align: right;">23.45</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Male</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">current</td>
+<td style="text-align: right;">20.14</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Female</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">never</td>
+<td style="text-align: right;">27.32</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"Variable"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    gender               age         hypertension     heart_disease    
- Length:100000      Min.   : 0.08   Min.   :0.00000   Min.   :0.00000  
- Class :character   1st Qu.:24.00   1st Qu.:0.00000   1st Qu.:0.00000  
- Mode  :character   Median :43.00   Median :0.00000   Median :0.00000  
-                    Mean   :41.89   Mean   :0.07485   Mean   :0.03942  
-                    3rd Qu.:60.00   3rd Qu.:0.00000   3rd Qu.:0.00000  
-                    Max.   :80.00   Max.   :1.00000   Max.   :1.00000  
- smoking_history         bmi         hb_a1c_level   blood_glucose_level
- Length:100000      Min.   :10.01   Min.   :3.500   Min.   : 80.0      
- Class :character   1st Qu.:23.63   1st Qu.:4.800   1st Qu.:100.0      
- Mode  :character   Median :27.32   Median :5.800   Median :140.0      
-                    Mean   :27.32   Mean   :5.528   Mean   :138.1      
-                    3rd Qu.:29.58   3rd Qu.:6.200   3rd Qu.:159.0      
-                    Max.   :95.69   Max.   :9.000   Max.   :300.0      
- diabetes 
- 0:91500  
- 1: 8500  
-          
-          
-          
-          </code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Var1</th>
+<th style="text-align: left;">Var2</th>
+<th style="text-align: left;">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">Length:100000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">Class :character</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">Mode :character</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">gender</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Min. : 0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">1st Qu.:24.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Median :43.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Mean :41.89</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">11</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">3rd Qu.:60.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Max. :80.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">13</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">Min. :0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">14</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">1st Qu.:0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">15</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">Median :0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">16</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">Mean :0.07485</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">17</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">3rd Qu.:0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: left;">Max. :1.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">19</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">Min. :0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">20</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">1st Qu.:0.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">21</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">Median :0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">22</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">Mean :0.03942</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">23</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">3rd Qu.:0.00000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">24</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: left;">Max. :1.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">25</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">Length:100000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">26</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">Class :character</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">27</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">Mode :character</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">28</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">29</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">30</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">smoking_history</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">31</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">Min. :10.01</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">32</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">1st Qu.:23.63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">Median :27.32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">34</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">Mean :27.32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">35</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">3rd Qu.:29.58</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">36</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">bmi</td>
+<td style="text-align: left;">Max. :95.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">37</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">Min. :3.500</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">38</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">1st Qu.:4.800</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">39</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">Median :5.800</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">40</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">Mean :5.528</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">41</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">3rd Qu.:6.200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">42</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: left;">Max. :9.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">43</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">Min. : 80.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">44</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">1st Qu.:100.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">45</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">Median :140.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">46</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">Mean :138.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">47</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">3rd Qu.:159.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">48</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: left;">Max. :300.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">49</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">0:91500</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">50</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">1: 8500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">51</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">52</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">53</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">54</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>To gain a better understanding of our numeric variables, we will visualize their distributions.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Numeric Variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Numeric Variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -270,12 +675,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(diabetes), <span class="at">y =</span> value, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diabetes"</span>, <span class="at">y =</span> <span class="st">"Value"</span>, <span class="at">title =</span> <span class="st">"Numeric Variables by Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(diabetes), <span class="at">y =</span> value, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diabetes"</span>, <span class="at">y =</span> <span class="st">"Value"</span>, <span class="at">title =</span> <span class="st">"Numeric Variables by Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -289,10 +694,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> hb_a1c_level, <span class="at">color =</span> diabetes)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> hypertension) <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HbA1c vs Age by Hypertension and Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> hb_a1c_level, <span class="at">color =</span> diabetes)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> hypertension) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"HbA1c vs Age by Hypertension and Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -306,13 +711,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(hypertension, heart_disease, smoking_history), as.character)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gender, hypertension, heart_disease, smoking_history)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Category"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>, <span class="at">fill =</span> <span class="st">"Diabetes"</span>, <span class="at">title =</span> <span class="st">"Categorical Variables by Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(hypertension, heart_disease, smoking_history), as.character)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(gender, hypertension, heart_disease, smoking_history)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Category"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>, <span class="at">fill =</span> <span class="st">"Diabetes"</span>, <span class="at">title =</span> <span class="st">"Categorical Variables by Diabetes Status"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -326,30 +731,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoking_history =</span> <span class="fu">case_when</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"current"</span>) <span class="sc">~</span> <span class="st">"current"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"former"</span>, <span class="st">"ever"</span>, <span class="st">"not current"</span>) <span class="sc">~</span> <span class="st">"former"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">==</span> <span class="st">"never"</span> <span class="sc">~</span> <span class="st">"never"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">==</span> <span class="st">"no info"</span> <span class="sc">~</span> <span class="st">"no info"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> smoking_history </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoking_history =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"current"</span>) <span class="sc">~</span> <span class="st">"current"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"former"</span>, <span class="st">"ever"</span>, <span class="st">"not current"</span>) <span class="sc">~</span> <span class="st">"former"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">==</span> <span class="st">"never"</span> <span class="sc">~</span> <span class="st">"never"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    smoking_history <span class="sc">==</span> <span class="st">"no info"</span> <span class="sc">~</span> <span class="st">"no info"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> smoking_history </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Now that that variable is changed to be more readable we will check its correlation with diabetes.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> smoking_history, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Smoking History"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Diabetes"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Proportion of Diabetes Status by Smoking History"</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> smoking_history, <span class="at">fill =</span> <span class="fu">as.factor</span>(diabetes))) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Smoking History"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Diabetes"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Proportion of Diabetes Status by Smoking History"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -363,38 +768,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(diabetes) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(diabetes) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(age, bmi, hb_a1c_level, blood_glucose_level), mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `summarise()`.
-ℹ In argument: `across(...)`.
-ℹ In group 1: `diabetes = 0`.
-Caused by warning:
-! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
-Supply arguments directly to `.fns` through an anonymous function instead.
-
-  # Previously
-  across(a:b, mean, na.rm = TRUE)
-
-  # Now
-  across(a:b, \(x) mean(x, na.rm = TRUE))</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">diabetes</th>
+<th style="text-align: right;">age</th>
+<th style="text-align: right;">bmi</th>
+<th style="text-align: right;">hb_a1c_level</th>
+<th style="text-align: right;">blood_glucose_level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">40.10271</td>
+<td style="text-align: right;">26.90312</td>
+<td style="text-align: right;">5.395483</td>
+<td style="text-align: right;">132.8594</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">60.84610</td>
+<td style="text-align: right;">31.93590</td>
+<td style="text-align: right;">6.944176</td>
+<td style="text-align: right;">194.0767</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  diabetes   age   bmi hb_a1c_level blood_glucose_level
-  &lt;fct&gt;    &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;               &lt;dbl&gt;
-1 0         40.1  26.9         5.40                133.
-2 1         60.8  31.9         6.94                194.</code></pre>
 </div>
-</div>
-<p>From splitting the numeric data and finding the mean for each variable dependent on diabetes or not, we are able to see some key differences. We can see that the average age range differs about 20 years which is a large enough gap to consider it as a factor to diagnosis. Then we go to bmi, which if diabetic averages around 31.9, which according to the American Society of Metabolic and Bariatric Surgery is considered obesity, which is a major risk factor for Type 2 diabetes. This tells us that it would be a significant feature for our model. Same can be said for Hb A1c levels and blood glucose levels, there is a significant jump in A1c and blood glucose for diabetics compared to non-diabetics.</p>
+<p>From splitting the numeric data and finding the mean for each variable dependent on diabetes or not, we are able to see some key differences. We can see that the average age range differs about 20 years which is a large enough gap to consider it as a factor to diagnosis. Then we go to bmi, which if diabetic averages around 31.9, which according to the American Society of Metabolic and Bariatric Surgery [1] is considered obesity, which is a major risk factor for Type 2 diabetes. This tells us that it would be a significant feature for our model. Same can be said for Hb A1c levels and blood glucose levels, there is a significant jump in A1c and blood glucose for diabetics compared to non-diabetics.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(diabetes <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(tree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(diabetes <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>(tree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -420,37 +834,90 @@ Supply arguments directly to `.fns` through an anonymous function instead.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>log_reg_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>log_reg_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(diabetes <span class="sc">~</span> age <span class="sc">+</span> bmi <span class="sc">+</span> hb_a1c_level <span class="sc">+</span> blood_glucose_level <span class="sc">+</span> hypertension <span class="sc">+</span> heart_disease, <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_median</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mode</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>log_reg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(log_reg_spec) <span class="sc">%&gt;%</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(log_reg_rec)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>log_reg_fit <span class="ot">&lt;-</span> log_reg_wf <span class="sc">%&gt;%</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> train)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>log_reg_fit <span class="sc">%&gt;%</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>log_reg_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>log_reg_rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(diabetes <span class="sc">~</span> age <span class="sc">+</span> bmi <span class="sc">+</span> hb_a1c_level <span class="sc">+</span> blood_glucose_level <span class="sc">+</span> hypertension <span class="sc">+</span> heart_disease, <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_median</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mode</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>log_reg_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(log_reg_spec) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(log_reg_rec)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>log_reg_fit <span class="ot">&lt;-</span> log_reg_wf <span class="sc">%&gt;%</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> train)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>log_reg_fit <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 7 × 5
-  term                estimate std.error statistic   p.value
-  &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-1 (Intercept)         -27.3     0.321        -85.3 0        
-2 age                   0.0453  0.00121       37.6 0        
-3 bmi                   0.0913  0.00283       32.2 8.61e-228
-4 hb_a1c_level          2.35    0.0397        59.2 0        
-5 blood_glucose_level   0.0332  0.000531      62.5 0        
-6 hypertension          0.795   0.0526        15.1 1.02e- 51
-7 heart_disease         0.795   0.0672        11.8 2.82e- 32</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-27.3249567</td>
+<td style="text-align: right;">0.3205263</td>
+<td style="text-align: right;">-85.25028</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">0.0453329</td>
+<td style="text-align: right;">0.0012066</td>
+<td style="text-align: right;">37.57154</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bmi</td>
+<td style="text-align: right;">0.0913476</td>
+<td style="text-align: right;">0.0028349</td>
+<td style="text-align: right;">32.22227</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hb_a1c_level</td>
+<td style="text-align: right;">2.3534193</td>
+<td style="text-align: right;">0.0397446</td>
+<td style="text-align: right;">59.21354</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">blood_glucose_level</td>
+<td style="text-align: right;">0.0332033</td>
+<td style="text-align: right;">0.0005310</td>
+<td style="text-align: right;">62.52500</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hypertension</td>
+<td style="text-align: right;">0.7952096</td>
+<td style="text-align: right;">0.0525562</td>
+<td style="text-align: right;">15.13066</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">heart_disease</td>
+<td style="text-align: right;">0.7948960</td>
+<td style="text-align: right;">0.0672090</td>
+<td style="text-align: right;">11.82722</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>We began our modeling with a simple logistic regression — a natural starting point for a binary classification problem like predicting diabetes. Logistic regression is interpretable, fast, and provides probabilistic outputs that can guide decision-making.</p>
@@ -459,24 +926,57 @@ Supply arguments directly to `.fns` through an anonymous function instead.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>my_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, precision, recall)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>log_reg_cv_results <span class="ot">&lt;-</span> log_reg_wf <span class="sc">%&gt;%</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> train_folds,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> my_metrics</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>log_reg_cv_results <span class="sc">%&gt;%</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>my_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, precision, recall)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>log_reg_cv_results <span class="ot">&lt;-</span> log_reg_wf <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> train_folds,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> my_metrics</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>log_reg_cv_results <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 6
-  .metric   .estimator  mean     n  std_err .config             
-  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;               
-1 accuracy  binary     0.961    10 0.000436 Preprocessor1_Model1
-2 precision binary     0.966    10 0.000473 Preprocessor1_Model1
-3 recall    binary     0.991    10 0.000324 Preprocessor1_Model1</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9605750</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004359</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9664545</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004729</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9913092</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0003241</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>The average recall was remarkably high at 99.13%, suggesting that our model successfully captures the vast majority of diabetic cases. While promising, this performance raised concerns of potential overfitting — hence our decision to compare it to a more flexible, non-linear model: a random forest.</p>
@@ -486,125 +986,166 @@ Supply arguments directly to `.fns` through an anonymous function instead.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>(), <span class="at">trees =</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(diabetes <span class="sc">~</span> age <span class="sc">+</span> bmi <span class="sc">+</span> hb_a1c_level <span class="sc">+</span> blood_glucose_level <span class="sc">+</span> hypertension <span class="sc">+</span> heart_disease, <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_median</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mode</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_spec) <span class="sc">%&gt;%</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rf_recipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>(), <span class="at">trees =</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(diabetes <span class="sc">~</span> age <span class="sc">+</span> bmi <span class="sc">+</span> hb_a1c_level <span class="sc">+</span> blood_glucose_level <span class="sc">+</span> hypertension <span class="sc">+</span> heart_disease, <span class="at">data =</span> train) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_median</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mode</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_spec) <span class="sc">%&gt;%</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rf_recipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We implemented a random forest model, well-suited for capturing non-linear relationships and interactions between variables. To enhance performance, we tuned its hyperparameters using cross-validation and parallel processing.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>n_cores <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>()</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">makeCluster</span>(n_cores <span class="sc">-</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"PSOCK"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(cluster)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>rf_grid <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtry</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>)),  </span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min_n</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">15</span>)),</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">10</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>rf_tuned <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  rf_wf,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> train_folds,</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> rf_grid,</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc),</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>parallel<span class="sc">::</span><span class="fu">stopCluster</span>(cluster)</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="fu">unregister</span>()</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>rf_tuned <span class="sc">%&gt;%</span></span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>n_cores <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> parallel<span class="sc">::</span><span class="fu">makeCluster</span>(n_cores <span class="sc">-</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"PSOCK"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(cluster)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">tic</span>()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>rf_grid <span class="ot">&lt;-</span> <span class="fu">grid_random</span>(</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtry</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">6</span>)),  </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">min_n</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">15</span>)),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">10</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>rf_tuned <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  rf_wf,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> train_folds,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> rf_grid,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">metrics =</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>656.981 sec elapsed</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>parallel<span class="sc">::</span><span class="fu">stopCluster</span>(cluster)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unregister</span>()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rf_tuned <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 40 × 8
+    mtry min_n .metric   .estimator  mean     n  std_err .config              
+   &lt;int&gt; &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;                
+ 1     5     3 accuracy  binary     0.969    10 0.000556 Preprocessor1_Model01
+ 2     5     3 precision binary     0.973    10 0.000444 Preprocessor1_Model01
+ 3     5     3 recall    binary     0.994    10 0.000307 Preprocessor1_Model01
+ 4     5     3 roc_auc   binary     0.967    10 0.000779 Preprocessor1_Model01
+ 5     1     7 accuracy  binary     0.972    10 0.000400 Preprocessor1_Model02
+ 6     1     7 precision binary     0.970    10 0.000443 Preprocessor1_Model02
+ 7     1     7 recall    binary     1        10 0        Preprocessor1_Model02
+ 8     1     7 roc_auc   binary     0.960    10 0.00107  Preprocessor1_Model02
+ 9     5    12 accuracy  binary     0.971    10 0.000522 Preprocessor1_Model03
+10     5    12 precision binary     0.972    10 0.000491 Preprocessor1_Model03
+# ℹ 30 more rows</code></pre>
+</div>
 </div>
 <p>The random forest showed excellent performance with a recall of 1.0 for several configurations — indicating that it identified every diabetic case in the training folds. While this could suggest overfitting, further examination revealed a precision of around 0.97, implying very few false positives. This balance between sensitivity and precision suggests the model is not only effective but also reliable.</p>
 <p>We can compare our random forest model with hyperparameter tuning and our logistic regression model with cross validation.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_tuned) <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>log_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(log_reg_cv_results) <span class="sc">%&gt;%</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_metrics, log_metrics)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> all_metrics <span class="sc">%&gt;%</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"accuracy"</span>, <span class="st">"recall"</span>, <span class="st">"precision"</span>, <span class="st">"roc_auc"</span>))</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> model, <span class="at">y =</span> mean, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> std_err, <span class="at">ymax =</span> mean <span class="sc">+</span> std_err),</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Performance with Error Bars (CV Estimates)"</span>,</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Metric (± Standard Error)"</span>,</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Model"</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_tuned) <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>log_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(log_reg_cv_results) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_metrics, log_metrics)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> all_metrics <span class="sc">%&gt;%</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"accuracy"</span>, <span class="st">"recall"</span>, <span class="st">"precision"</span>, <span class="st">"roc_auc"</span>))</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> model, <span class="at">y =</span> mean, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> std_err, <span class="at">ymax =</span> mean <span class="sc">+</span> std_err),</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Performance with Error Bars (CV Estimates)"</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Metric (± Standard Error)"</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Model"</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Diabetes-Predictions_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>This visual comparison highlights the strong performance of both models. The random forest has a slight edge across all metrics with low variance, as shown by the short error bars. These findings suggest that while both models are valid for our predictive goal, the random forest may generalize slightly better to unseen data.</p>
 <p>We will proceed to test both models on held-out test data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tuned, <span class="at">metric =</span> <span class="st">"roc_auc"</span>)  </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>final_rf_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(rf_wf, best_rf)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> final_rf_wf <span class="sc">%&gt;%</span> <span class="fu">fit</span>(<span class="at">data =</span> train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tuned, <span class="at">metric =</span> <span class="st">"roc_auc"</span>)  </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>final_rf_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(rf_wf, best_rf)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> final_rf_wf <span class="sc">%&gt;%</span> <span class="fu">fit</span>(<span class="at">data =</span> train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, test)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>log_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_reg_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(log_reg_fit, test)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, test)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>log_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_reg_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(log_reg_fit, test)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>metrics_to_use <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>rf_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(rf_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>log_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(log_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_test_metrics, log_test_metrics)</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>model_comparison</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>metrics_to_use <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>rf_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(rf_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>log_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(log_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_test_metrics, log_test_metrics)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>model_comparison</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  .metric   .estimator .estimate model              
+  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;              
+1 accuracy  binary         0.971 Random Forest      
+2 recall    binary         0.999 Random Forest      
+3 precision binary         0.970 Random Forest      
+4 roc_auc   binary         0.976 Random Forest      
+5 accuracy  binary         0.959 Logistic Regression
+6 recall    binary         0.991 Logistic Regression
+7 precision binary         0.965 Logistic Regression
+8 roc_auc   binary         0.961 Logistic Regression</code></pre>
+</div>
 </div>
 <p>The final comparison on test data confirms the trend seen during training: the random forest outperforms the logistic regression model across all key metrics. Its ability to handle complex interactions and non-linearities gives it an advantage, making it the more suitable model for our objective — accurately identifying patients at risk of diabetes.</p>
 </section>
@@ -619,9 +1160,11 @@ Supply arguments directly to `.fns` through an anonymous function instead.
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The exploratory data analysis highlighted key risk factors for diabetes, including high HbA1c, elevated blood glucose, hypertension, and heart disease. Among the models tested, the random forest classifier performed best, achieving high accuracy and balanced precision and recall. This suggests it is well-suited for identifying at-risk individuals. While the model shows strong predictive potential, its performance depends on the quality and balance of the data, and predictions should be used as a support tool rather than a diagnosis.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
+<p>[1] https://asmbs.org/resources/type-2-diabetes-and-metabolic-surgery-fact-sheet/ [2] https://www.cdc.gov/nchs/fastats/leading-causes-of-death.htm</p>
 </section>
 
 </main>
