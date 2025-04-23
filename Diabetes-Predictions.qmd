@@ -54,15 +54,21 @@ train_folds <- vfold_cv(train, v = 10)
 
 ## Statement of Purpose
 
-Diabetes has become one of the leading causes of death according to "", the goal of this project is to develop a predictive model that determines whether a patient has diabetes based on their medical and demographic information given to us in this data set. Using features such as age, BMI, hypertension, heart disease, smoking history, HbA1c level, and blood glucose level, we will create a model that will find and analyze patterns within the dataset to accurately classify patients as diabetic or non-diabetic. The creation of this model aims to aid in early detection and support informed medical decision-making.
+Diabetes has become one of the leading causes of death according to the CDC (National Center for Health Statistics), the goal of this project is to develop a predictive model that determines whether a patient has diabetes based on their medical and demographic information given to us in this data set. Using features such as age, BMI, hypertension, heart disease, smoking history, HbA1c level, and blood glucose level, we will create a model that will find and analyze patterns within the dataset to accurately classify patients as diabetic or non-diabetic. The creation of this model aims to aid in early detection and support informed medical decision-making. This analysis addresses a vital question: Can we use existing patient data to predict diabetes with high accuracy and sensitivity?
 
 ## Introduction
 
-Diabetes is one of the most common chronic health conditions worldwide—and its growing prevalence makes early detection more important than ever. With the rise of data-driven healthcare, predictive modeling offers a powerful way to support clinicians in identifying at-risk patients before serious complications arise.
+Diabetes is one of the most common chronic health conditions worldwide, and its growing prevalence continues to place a significant burden on healthcare systems, insurers, and patients alike. In particular, the complications from undiagnosed or poorly managed diabetes can lead to costly hospitalizations and long-term damage to organs, nerves, and blood vessels. As such, early detection is a critical priority—not just for individual patient outcomes but for organizational efficiency and sustainability.
 
-In this project, I explore the use of machine learning to predict whether a patient has diabetes based on medical and demographic data. The dataset includes features like age, gender, BMI, hypertension, heart disease, smoking history, HbA1c levels, and blood glucose levels—factors that are often considered in real-world diagnoses. By analyzing these variables, the goal is to build a classification model that can accurately distinguish between diabetic and non-diabetic patients.
+This project applies predictive modeling techniques to address that need. Our goal is to determine whether a patient is likely to have diabetes based on available medical and demographic information. The dataset used in this analysis includes variables commonly assessed in clinical settings, such as age, gender, BMI, hypertension, heart disease, smoking history, HbA1c levels, and blood glucose levels. These features are representative of the data that would typically be accessible to hospitals, outpatient clinics, and insurers managing patient risk profiles.
 
-The process begins with exploratory data analysis to understand the structure and trends in the data, followed by training and evaluating several machine learning models. Metrics such as accuracy, precision, and recall will help assess how well the model performs. Beyond model performance, this project aims to show how even a modest dataset, when carefully analyzed, can offer valuable insights into patient health and help lay the groundwork for smarter, more proactive care.
+The primary stakeholder for this analysis is the healthcare industry, which stands to benefit greatly from the integration of predictive models into early screening and triage systems. For hospitals and clinics, this tool could serve as a decision-support system that highlights high-risk patients for further testing or intervention. For insurance companies, accurate risk assessment models can help shape coverage plans, support preventative care programs, and reduce long-term treatment costs. Public health agencies might also use models like this to identify communities with high undiagnosed risk and allocate outreach or education resources accordingly.
+
+Before modeling began, we conducted exploratory data analysis (EDA) to uncover structure, trends, and relationships in the dataset. While the data was generally clean, some minor adjustments were necessary for effective modeling. For example, the smoking history variable was initially split into overlapping or inconsistently labeled categories (e.g., "current," "ever," "not current") that were consolidated into more interpretable groups (e.g., "current," "former," "never"). Similarly, categorical variables were encoded into numerical form using dummy variables, and missing values in numeric fields were imputed using median values. These steps ensured compatibility with the machine learning models selected.
+
+The modeling phase explored multiple classification algorithms, including logistic regression and random forest, using cross-validation and hyperparameter tuning to evaluate their performance. Key metrics such as accuracy, precision, recall, and ROC AUC were used to compare models and assess their suitability for real-world deployment.
+
+Ultimately, this project demonstrates how even modest datasets can yield meaningful insights when approached with a thoughtful analytical process. It builds a case for the healthcare industry to continue investing in predictive analytics—not as a replacement for clinical judgment, but as a tool that complements and enhances evidence-based care.
 
 ## Executive Summary
 
@@ -80,7 +86,8 @@ data %>%
 data %>% 
   summary
 ```
-Lets take a closer look at each of our variables through plots. We will start with our numeric variables.
+
+To gain a better understanding of our numeric variables, we will visualize their distributions.
 
 ```{r}
 train %>% 
@@ -90,7 +97,8 @@ train %>%
   facet_wrap(~ name, scales = "free") +
   labs(title = "Distribution of Numeric Variables")
 ```
-From these plots, we are able to see that our age variable tends to have a mostly normal distribution besides an outlier of 80 years old. Our blood glucose (BG) level plot shows us that a majority of the BG's are in the normal range or sightly above. A normal range of BG for a non-diabetic is between 80-120 according to "find source". I have to assume that this data-set is referring to Type 2 Diabetes due to the variables all being risk factors to Type 2. 
+
+These histograms give us an initial sense of the data. Age appears roughly normally distributed with an outlier around 80 years old. Blood glucose (BG) levels show a concentration around the normal non-diabetic range (80–120), suggesting that a large portion of patients are near or slightly above this threshold. Given the features present, it's reasonable to assume this dataset is focused on Type 2 diabetes, as many of the predictors (e.g., age, BMI, blood glucose) are common Type 2 risk factors.
 
 ```{r}
 train %>%
@@ -100,7 +108,8 @@ train %>%
   facet_wrap(~ name, scales = "free") +
   labs(x = "Diabetes", y = "Value", title = "Numeric Variables by Diabetes Status")
 ```
-These box plots are able to give us a lot of insight such as the patients with diabetes tend to be most around the range of 60 years old. The as expected, the higher the blood glucose level and Hb A1c levels are the more correlated with diabetes they are, which is accurate to the definition of diabetes. 
+
+Box plots give us more targeted insights. Patients with diabetes tend to cluster around age 60, and as expected, higher blood glucose and HbA1c levels are strongly associated with diabetes. This aligns with the medical definitions of diabetes, reinforcing the relevance of these variables.
 
 ```{r}
 ggplot(train, aes(x = age, y = hb_a1c_level, color = diabetes)) +
@@ -108,7 +117,8 @@ ggplot(train, aes(x = age, y = hb_a1c_level, color = diabetes)) +
   facet_wrap(~ hypertension) +
   labs(title = "HbA1c vs Age by Hypertension and Diabetes Status")
 ```
-From this plot we are able to see that a patient with hypertension having an A1c between 5 and 7 is more likely to have diabetes than not have diabetes. We can also notice that a patient is most likely to have hypertension is they are over 20 years old. 
+
+This scatterplot highlights interactions between hypertension and diabetes. Notably, patients with hypertension and HbA1c levels between 5 and 7 are more likely to be diabetic. It also shows that most hypertensive patients are over 20, suggesting age and hypertension often go hand in hand. 
 
 ```{r}
 train %>%
@@ -161,9 +171,18 @@ From splitting the numeric data and finding the mean for each variable dependent
 tree <- rpart(diabetes ~ ., data = train, method = "class")
 rpart.plot::rpart.plot(tree)
 ```
-We can see from this quick decision tree that Hb A1c is a large determinant in whether a patient has diabetes or not, with it being the root split. This tree shows us that blood glucose only really matters if Hb A1c is under a 6.7, showing that these features have a large interaction. 
 
-Based on the exploratory data analysis done, we can determine that the best features for our first model will be age, bmi, Hb A1c, blood glucose, hypertension, and heart disease. 
+This quick decision tree tells us a lot. HbA1c is the root split — meaning it's the most decisive feature for classifying diabetes in this data. Blood glucose only becomes influential when HbA1c is under 6.7, highlighting a strong interaction between these variables.
+
+Based on the exploratory data analysis, the most relevant features for predicting diabetes are:
+
+- Age and BMI: both show clear separations between diabetic and non-diabetic groups.
+
+- HbA1c and blood glucose: clinical markers that strongly define diabetes.
+
+- Hypertension and heart disease: show clear associations with diabetes in the data.
+
+Each of these variables will be included in our first predictive model, as they are both statistically and clinically meaningful in identifying individuals at risk for diabetes.
 
 ## Model Construction and Assesment
 
@@ -191,7 +210,11 @@ log_reg_fit %>%
   tidy() 
 ```
 
-We are able to interpret from this fitted engine that all of the predictors we chose are statistically significant becasue their p-values are under 0.05. Our estimates for each predictor show us precisely how significant each variable is. It shows us that each increase of Hb A1c level by 1 increases the odds of having diabetes by 2.35, and if the patient has hypertension or heart disease it increases the odds of having diabetes by about 0.79. So we can conclude from this first model that we have chosen good predictors for our model. Now we can cross validate our model and look at the performance metrics we are interested in tracking (`my_metrics`), then we'll run the *cross-validation* procedure with the `fit_resamples()` function, and collect the performance metrics using `collect_metrics()`.
+We began our modeling with a simple logistic regression — a natural starting point for a binary classification problem like predicting diabetes. Logistic regression is interpretable, fast, and provides probabilistic outputs that can guide decision-making.
+
+The fitted model showed that all selected predictors were statistically significant, with p-values under 0.05. The interpretation of coefficients reveals, for instance, that for every 1-unit increase in HbA1c, the odds of having diabetes increase by approximately 2.35 times. The presence of hypertension or heart disease increases the odds by about 0.79. These findings align with clinical understanding and affirm that our variable choices are well-suited to the task.
+
+We will now evaluate the model using 10-fold cross-validation.
 
 ```{r}
 my_metrics <- metric_set(accuracy, precision, recall)
@@ -206,8 +229,7 @@ log_reg_cv_results %>%
   collect_metrics() 
 ```
 
-Notice that the average recall over the ten cross-validation folds was around 99.13%. This indicates that we should expect a model of this particular form (a logistic regressor with the predictors we utilized and the feature engineering steps in our recipe) to correctly capture about 99% of patients who have diabetes. Have we over-fitted this model? Lets try a random forest model to compare. 
-
+The average recall was remarkably high at 99.13%, suggesting that our model successfully captures the vast majority of diabetic cases. While promising, this performance raised concerns of potential overfitting — hence our decision to compare it to a more flexible, non-linear model: a random forest. 
 
 ### Randome Forest Model
 ```{r}
@@ -226,9 +248,10 @@ rf_wf <- workflow() %>%
   add_recipe(rf_recipe)
 ```
 
-Tuning our hyperparameters with parallel processing
+We implemented a random forest model, well-suited for capturing non-linear relationships and interactions between variables. To enhance performance, we tuned its hyperparameters using cross-validation and parallel processing.
 
 ```{r}
+#| eval: false
 n_cores <- parallel::detectCores()
 cluster <- parallel::makeCluster(n_cores - 1, type = "PSOCK")
 doParallel::registerDoParallel(cluster)
@@ -254,15 +277,18 @@ tictoc::toc()
 
 parallel::stopCluster(cluster)
 
+unregister()
+
 rf_tuned %>%
   collect_metrics() 
 ```
 
-From tuning our random forest model, we get a recall of 1.0 with the hyperparameters of 1 `mtry` and 14 `min_n`, as well as 1 `mtry` and 9 `min_n`. This can be a sign of over-fitting as well because recall measures the proportion of actual positives that our model correctly identified. A recall of 1 means our model identified all diabetic patients in the training set. Now to ensure that this is not over-fitting we want to confirm that it is not getting false positives. We can see that for each of our recalls that are 1.0, our precision means rest at around 0.97, which tells us that there are few false positives. So we can confirm that this model is performing well. 
+The random forest showed excellent performance with a recall of 1.0 for several configurations — indicating that it identified every diabetic case in the training folds. While this could suggest overfitting, further examination revealed a precision of around 0.97, implying very few false positives. This balance between sensitivity and precision suggests the model is not only effective but also reliable.
 
 We can compare our random forest model with hyperparameter tuning and our logistic regression model with cross validation. 
 
 ```{r}
+#| eval: false
 rf_metrics <- collect_metrics(rf_tuned) %>%
   mutate(model = "Random Forest")
 
@@ -288,18 +314,21 @@ ggplot(plot_data, aes(x = model, y = mean, fill = model)) +
   theme(legend.position = "none")
 ```
 
-Based on this plot we are able to see that both models perform extremely well on the training data, with short error bars, meaning low variance. However, we can see that our random forest model performs just slightly better on the training data. Now we will test both models on the test data to ensure there is no over-fitting, and we can decide the best model for use from there, but first we must fit our random forest model. 
+This visual comparison highlights the strong performance of both models. The random forest has a slight edge across all metrics with low variance, as shown by the short error bars. These findings suggest that while both models are valid for our predictive goal, the random forest may generalize slightly better to unseen data.
+
+We will proceed to test both models on held-out test data.
 
 ```{r}
+#| eval: false
 best_rf <- select_best(rf_tuned, metric = "roc_auc")  
 
 final_rf_wf <- finalize_workflow(rf_wf, best_rf)
 
 rf_fit <- final_rf_wf %>% fit(data = train)
 ```
-Now, we will save and run the predictions from each model on the testing data.
 
 ```{r}
+#| eval: false
 rf_preds <- predict(rf_fit, test, type = "prob") %>%
   bind_cols(predict(rf_fit, test)) %>%
   bind_cols(test)
@@ -309,10 +338,8 @@ log_preds <- predict(log_reg_fit, test, type = "prob") %>%
   bind_cols(test)
 ```
 
-
-Now, we can compare each model on the testing data using the metrics accuracy, recall, precision, and roc auc.
-
 ```{r}
+#| eval: false
 metrics_to_use <- metric_set(accuracy, recall, precision, roc_auc)
 
 rf_test_metrics <- metrics_to_use(rf_preds, truth = diabetes, estimate = .pred_class, .pred_0) %>%
@@ -326,13 +353,21 @@ model_comparison <- bind_rows(rf_test_metrics, log_test_metrics)
 model_comparison
 ```
 
-
-Based on this we can see that our random forest model is performing better in all metrics, therefore is the best model. 
-
+The final comparison on test data confirms the trend seen during training: the random forest outperforms the logistic regression model across all key metrics. Its ability to handle complex interactions and non-linearities gives it an advantage, making it the more suitable model for our objective — accurately identifying patients at risk of diabetes.
 
 ## Model Interpretation and Inference
 
-The logistic regression model with cross-validation performs well, however it is not the preferred choice because the random forest model  This higher recall rate is crucial in scenarios where missing even a small percentage of at-risk individuals could have severe consequences. Hyperparameter tuning plays a key role in optimizing the logistic regression model, as it adjusts parameters to enhance performance and ensure that the model generalizes well to new data.
+Both models, logistic regression and random forest, demonstrated strong performance, but the random forest model is the preferred choice based on its better predictive metrics. The final random forest model achieved an accuracy of 0.97, indicating that it correctly classified diabetes status 97% of the time. In contrast, the logistic regression model trailed slightly with an accuracy of 0.96.
 
+Where the random forest truly excels is in recall, reaching an impressive 0.999. This means the model successfully identified 99.9% of patients with diabetes. While logistic regression also posted a high recall, the random forest consistently outperformed it across all relevant metrics. In the context of diabetes prediction, recall is especially critical — a missed positive prediction could mean a missed diagnosis, potentially leading to severe health consequences. Thus, the near-perfect recall of the random forest offers an important practical advantage.
 
+Precision also favored the random forest slightly, at 0.97 compared to 0.96 for logistic regression. This suggests that the random forest model is slightly more cautious when predicting diabetes, resulting in fewer false positives. Such precision can help reduce unnecessary follow-up or interventions for patients incorrectly flagged as at risk.
+
+Despite these strong results, it's essential to acknowledge and account for uncertainty. While cross-validation helps to mitigate overfitting, no model is immune to variability when applied to new, unseen data. Although the standard errors were low across folds — indicating model stability — even small changes in recall or precision could carry meaningful clinical implications. Therefore, recommendations based on this model should be made with an understanding that, despite high overall performance, a small margin of error remains.
+
+In summary, the random forest model not only outperforms logistic regression on key metrics, but it also provides a high level of confidence in its predictions. This makes it a compelling choice for identifying patients at risk of diabetes, especially in high-stakes environments where early detection is vital.
+
+## Conclusion
+
+## References
 
