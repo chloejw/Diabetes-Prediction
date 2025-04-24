@@ -289,7 +289,8 @@ parallel::stopCluster(cluster)
 unregister()
 
 rf_tuned %>%
-  collect_metrics() 
+  collect_metrics() %>% 
+  kable()
 ```
 
 The random forest showed excellent performance with a recall of 1.0 for several configurations — indicating that it identified every diabetic case in the training folds. While this could suggest overfitting, further examination revealed a precision of around 0.97, implying very few false positives. This balance between sensitivity and precision suggests the model is not only effective but also reliable.
@@ -355,7 +356,8 @@ log_test_metrics <- metrics_to_use(log_preds, truth = diabetes, estimate = .pred
 
 model_comparison <- bind_rows(rf_test_metrics, log_test_metrics)
 
-model_comparison
+model_comparison %>% 
+  kable()
 ```
 
 The final comparison on test data confirms the trend seen during training: the random forest outperforms the logistic regression model across all key metrics. Its ability to handle complex interactions and non-linearities gives it an advantage, making it the more suitable model for our objective — accurately identifying patients at risk of diabetes.

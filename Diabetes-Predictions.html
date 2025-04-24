@@ -1029,7 +1029,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>tictoc<span class="sc">::</span><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>573.603 sec elapsed</code></pre>
+<pre><code>545.047 sec elapsed</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1038,23 +1038,436 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unregister</span>()</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rf_tuned <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 40 × 8
-    mtry min_n .metric   .estimator  mean     n  std_err .config              
-   &lt;int&gt; &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;                
- 1     5     3 accuracy  binary     0.969    10 0.000556 Preprocessor1_Model01
- 2     5     3 precision binary     0.973    10 0.000444 Preprocessor1_Model01
- 3     5     3 recall    binary     0.994    10 0.000307 Preprocessor1_Model01
- 4     5     3 roc_auc   binary     0.967    10 0.000779 Preprocessor1_Model01
- 5     1     7 accuracy  binary     0.972    10 0.000400 Preprocessor1_Model02
- 6     1     7 precision binary     0.970    10 0.000443 Preprocessor1_Model02
- 7     1     7 recall    binary     1        10 0        Preprocessor1_Model02
- 8     1     7 roc_auc   binary     0.960    10 0.00107  Preprocessor1_Model02
- 9     5    12 accuracy  binary     0.971    10 0.000522 Preprocessor1_Model03
-10     5    12 precision binary     0.972    10 0.000491 Preprocessor1_Model03
-# ℹ 30 more rows</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 3%">
+<col style="width: 12%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">mtry</th>
+<th style="text-align: right;">min_n</th>
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9693625</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0005564</td>
+<td style="text-align: left;">Preprocessor1_Model01</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9726532</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004439</td>
+<td style="text-align: left;">Preprocessor1_Model01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9944651</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0003068</td>
+<td style="text-align: left;">Preprocessor1_Model01</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9673454</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007789</td>
+<td style="text-align: left;">Preprocessor1_Model01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9720250</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004000</td>
+<td style="text-align: left;">Preprocessor1_Model02</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9703245</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004427</td>
+<td style="text-align: left;">Preprocessor1_Model02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">Preprocessor1_Model02</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9597378</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0010712</td>
+<td style="text-align: left;">Preprocessor1_Model02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9712375</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0005222</td>
+<td style="text-align: left;">Preprocessor1_Model03</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9720278</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004911</td>
+<td style="text-align: left;">Preprocessor1_Model03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9972529</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0001785</td>
+<td style="text-align: left;">Preprocessor1_Model03</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9709326</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0006627</td>
+<td style="text-align: left;">Preprocessor1_Model03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9699000</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0006089</td>
+<td style="text-align: left;">Preprocessor1_Model04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9725801</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004586</td>
+<td style="text-align: left;">Preprocessor1_Model04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9951471</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0002784</td>
+<td style="text-align: left;">Preprocessor1_Model04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9692047</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007720</td>
+<td style="text-align: left;">Preprocessor1_Model04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9713000</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0005205</td>
+<td style="text-align: left;">Preprocessor1_Model05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9719544</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004991</td>
+<td style="text-align: left;">Preprocessor1_Model05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9974035</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0001876</td>
+<td style="text-align: left;">Preprocessor1_Model05</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9714411</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007281</td>
+<td style="text-align: left;">Preprocessor1_Model05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9700125</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0006051</td>
+<td style="text-align: left;">Preprocessor1_Model06</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9723942</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004594</td>
+<td style="text-align: left;">Preprocessor1_Model06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9954757</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0002810</td>
+<td style="text-align: left;">Preprocessor1_Model06</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9686658</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007930</td>
+<td style="text-align: left;">Preprocessor1_Model06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9711250</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0005010</td>
+<td style="text-align: left;">Preprocessor1_Model07</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9720120</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004834</td>
+<td style="text-align: left;">Preprocessor1_Model07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9971435</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0001576</td>
+<td style="text-align: left;">Preprocessor1_Model07</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9708197</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007269</td>
+<td style="text-align: left;">Preprocessor1_Model07</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9721125</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004431</td>
+<td style="text-align: left;">Preprocessor1_Model08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9712766</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004586</td>
+<td style="text-align: left;">Preprocessor1_Model08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9990569</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0001232</td>
+<td style="text-align: left;">Preprocessor1_Model08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9743419</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0006461</td>
+<td style="text-align: left;">Preprocessor1_Model08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9720250</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004149</td>
+<td style="text-align: left;">Preprocessor1_Model09</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9712238</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004252</td>
+<td style="text-align: left;">Preprocessor1_Model09</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9990156</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0001228</td>
+<td style="text-align: left;">Preprocessor1_Model09</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9743270</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0006536</td>
+<td style="text-align: left;">Preprocessor1_Model09</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9713500</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0005470</td>
+<td style="text-align: left;">Preprocessor1_Model10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9719432</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0004908</td>
+<td style="text-align: left;">Preprocessor1_Model10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9974711</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0002073</td>
+<td style="text-align: left;">Preprocessor1_Model10</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9712977</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0007982</td>
+<td style="text-align: left;">Preprocessor1_Model10</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>The random forest showed excellent performance with a recall of 1.0 for several configurations — indicating that it identified every diabetic case in the training folds. While this could suggest overfitting, further examination revealed a precision of around 0.97, implying very few false positives. This balance between sensitivity and precision suggests the model is not only effective but also reliable.</p>
@@ -1062,29 +1475,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_tuned) <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>log_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(log_reg_cv_results) <span class="sc">%&gt;%</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_metrics, log_metrics)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> all_metrics <span class="sc">%&gt;%</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"accuracy"</span>, <span class="st">"recall"</span>, <span class="st">"precision"</span>, <span class="st">"roc_auc"</span>))</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> model, <span class="at">y =</span> mean, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> std_err, <span class="at">ymax =</span> mean <span class="sc">+</span> std_err),</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Performance with Error Bars (CV Estimates)"</span>,</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Metric (± Standard Error)"</span>,</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Model"</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rf_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(rf_tuned) <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>log_metrics <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(log_reg_cv_results) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>all_metrics <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_metrics, log_metrics)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> all_metrics <span class="sc">%&gt;%</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"accuracy"</span>, <span class="st">"recall"</span>, <span class="st">"precision"</span>, <span class="st">"roc_auc"</span>))</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(plot_data, <span class="fu">aes</span>(<span class="at">x =</span> model, <span class="at">y =</span> mean, <span class="at">fill =</span> model)) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> std_err, <span class="at">ymax =</span> mean <span class="sc">+</span> std_err),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.9</span>)) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> .metric, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Model Performance with Error Bars (CV Estimates)"</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean Metric (± Standard Error)"</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Model"</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1099,52 +1512,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tuned, <span class="at">metric =</span> <span class="st">"roc_auc"</span>)  </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>final_rf_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(rf_wf, best_rf)</span>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tuned, <span class="at">metric =</span> <span class="st">"roc_auc"</span>)  </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>final_rf_wf <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(rf_wf, best_rf)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> final_rf_wf <span class="sc">%&gt;%</span> <span class="fu">fit</span>(<span class="at">data =</span> train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, test)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> final_rf_wf <span class="sc">%&gt;%</span> <span class="fu">fit</span>(<span class="at">data =</span> train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>log_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_reg_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(log_reg_fit, test)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, test)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>log_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_reg_fit, test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(log_reg_fit, test)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>metrics_to_use <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>rf_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(rf_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>log_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(log_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_test_metrics, log_test_metrics)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="sc">%&gt;%</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>metrics_to_use <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(accuracy, recall, precision, roc_auc)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>rf_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(rf_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random Forest"</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>log_test_metrics <span class="ot">&lt;-</span> <span class="fu">metrics_to_use</span>(log_preds, <span class="at">truth =</span> diabetes, <span class="at">estimate =</span> .pred_class, .pred_0) <span class="sc">%&gt;%</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic Regression"</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(rf_test_metrics, log_test_metrics)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>model_comparison</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 4
-  .metric   .estimator .estimate model              
-  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;              
-1 accuracy  binary         0.971 Random Forest      
-2 recall    binary         0.999 Random Forest      
-3 precision binary         0.970 Random Forest      
-4 roc_auc   binary         0.976 Random Forest      
-5 accuracy  binary         0.959 Logistic Regression
-6 recall    binary         0.991 Logistic Regression
-7 precision binary         0.965 Logistic Regression
-8 roc_auc   binary         0.961 Logistic Regression</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+<th style="text-align: left;">model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9709500</td>
+<td style="text-align: left;">Random Forest</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9990173</td>
+<td style="text-align: left;">Random Forest</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9701500</td>
+<td style="text-align: left;">Random Forest</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9757082</td>
+<td style="text-align: left;">Random Forest</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9587500</td>
+<td style="text-align: left;">Logistic Regression</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recall</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9912645</td>
+<td style="text-align: left;">Logistic Regression</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">precision</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9646671</td>
+<td style="text-align: left;">Logistic Regression</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9611277</td>
+<td style="text-align: left;">Logistic Regression</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>The final comparison on test data confirms the trend seen during training: the random forest outperforms the logistic regression model across all key metrics. Its ability to handle complex interactions and non-linearities gives it an advantage, making it the more suitable model for our objective — accurately identifying patients at risk of diabetes.</p>
